@@ -6,7 +6,12 @@ const User = require('../moldels/User');
 const jwt = require('jsonwebtoken');
 
 router.get('/', (req, res) => res.send('Hola mundo'));
-const nodemailer = require('nodemailer');
+
+
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    const newUser = new User({ email, password });
+    const nodemailer = require('nodemailer');
 
 enviarMail = async () => {
     
@@ -21,7 +26,7 @@ enviarMail = async () => {
     }
     const mensaje = {
         from: 'cybbryan@gmail.com',
-        to: 'bag.yumbo@yavirac.edu.ec',
+        to: email,
         subject: 'Nuevo usuario',
         text: 'Su usuario ha sido registrado con éxito'
     }
@@ -32,12 +37,6 @@ enviarMail = async () => {
 
 }
 
-
-
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    const newUser = new User({ email, password });
-    
     await newUser.save();
     const token = jwt.sign({ _id: newUser._id }, 'secretkey')
     res.status(200).json({ token })
