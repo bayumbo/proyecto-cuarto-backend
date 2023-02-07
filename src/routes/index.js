@@ -6,27 +6,54 @@ const User = require('../moldels/User');
 const jwt = require('jsonwebtoken');
 
 router.get('/', (req, res) => res.send('Hola mundo'));
+const nodemailer = require('nodemailer');
+
+enviarMail = async () => {
+    
+    const config= {
+        host: 'smtp.gmail.com',
+        port: 587,
+        auth: {
+            user: 'cybbryan@gmail.com',
+            pass: 'rparzibsanrdvvqb'
+        }
+
+    }
+    const mensaje = {
+        from: 'cybbryan@gmail.com',
+        to: 'bag.yumbo@yavirac.edu.ec',
+        subject: 'Nuevo usuario',
+        text: 'Su usuario ha sido registrado con éxito'
+    }
+    const transport = nodemailer.createTransport(config);
+    const info = await transport.sendMail(mensaje);
+
+    console.log(info);
+
+}
+
+
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const newUser = new User({ email, password });
+    
     await newUser.save();
-
     const token = jwt.sign({ _id: newUser._id }, 'secretkey')
-
     res.status(200).json({ token })
-
+    return enviarMail();
 })
 
 router.post('/registro', async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email })
+    
     if (!user) return res.status(401).send("El correo no existe");
     if (user.password !== password) return res.status(401).send("Contraseña incorrecta");
-
+       
     const token = jwt.sign({ _id: user._id }, 'secretkey')
     res.status(200).json({ token })
-
+    
 
 })
 
