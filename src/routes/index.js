@@ -19,16 +19,16 @@ enviarMail = async () => {
         host: 'smtp.gmail.com',
         port: 587,
         auth: {
-            user: 'cybbryan@gmail.com',
-            pass: 'rparzibsanrdvvqb'
+            user: 'bag.yumbo@yavirac.edu.ec',
+            pass: 'dpcaheyspjfauiya'
         }
 
     }
     const mensaje = {
-        from: 'cybbryan@gmail.com',
+        from: 'bag.yumbo@yavirac.edu.ec',
         to: email,
         subject: 'Nuevo usuario',
-        text: 'Su usuario ha sido registrado con éxito'
+        text: 'Usted se ha registrado satisfactoriamente a la Biblioteca Yavirac'
     }
     const transport = nodemailer.createTransport(config);
     const info = await transport.sendMail(mensaje);
